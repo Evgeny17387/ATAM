@@ -39,10 +39,11 @@ read_input:
   call atam_atol
   movq %rax, length(%rip)
 
-  # Move cursor to beggining of code word
+  # Move cursor to beggining of the file
   lea file_buffer(%rip), %rdi
   xor %rcx, %rcx
 
+# Move cursor to beggining of the code itself
 LOOP1:
 
   movb (%rdi,%rcx), %dl
@@ -54,26 +55,29 @@ LOOP1:
 CONTINUE1:
 
   # Move bytes to return output
-  movq %rdi, %r10
-  movq %rcx, %r11
+  movq %rdi, %r10 # r10 - address of file_buffer
+  movq %rcx, %r11 # r11 - running index in file_buffer
   inc %r11
-  movq (%rsp), %r8
-  xor %r9, %r9
+  movq (%rsp), %r8 # r8 - conatains the address of codeword
+  xor %r9, %r9 # r9 - running index of codeword
 
+# read from file to code_word buffer
 LOOP2:
 
   cmpq length(%rip), %r9
   je CONTINUE2
-  
+
   cmp $8, %r11
   jne CONTINUE3
-  
+
+  # read 8 bytes from file to file_buffer
   call read_8_bytes
-  
+
   xor %r11, %r11
 
   jmp LOOP2
 
+# read byte from file_buffer to file
 CONTINUE3:
 
   movb (%r10,%r11), %dl
@@ -84,6 +88,7 @@ CONTINUE3:
   
   jmp LOOP2
 
+# finish running function
 CONTINUE2:
 
   # Close file
@@ -93,6 +98,7 @@ CONTINUE2:
 
   # Return length in 8'th
   movq length(%rip), %rax
+  xor %rdx, %rdx
   movq $8, %r8
   div %r8
 
