@@ -202,7 +202,7 @@ bring_balance_to_the_word:
   xor %rcx, %rcx
   xor %r8, %r8
 
-LOOP6:
+NEGATE_ALL:
 
   pushq %r8
   pushq %rdx
@@ -225,7 +225,7 @@ LOOP6:
   popq %rsi
 
   cmp %rax, %r12
-  je CONTINUE6
+  je FINISH_BRING_BALANCE_TO_THE_WORD
 
   pushq %r8
   pushq %rdx
@@ -238,16 +238,16 @@ LOOP6:
   inc %rdx
   inc %rcx
   cmp $64, %rcx
-  je CONTINUE7
-  jmp LOOP6
+  je NEGATE_QUADS
+  jmp NEGATE_ALL
 
-CONTINUE7:
+NEGATE_QUADS:
 
   xor %rcx, %rcx
   inc %r8
-  jmp LOOP6
+  jmp NEGATE_ALL
 
-CONTINUE6:
+FINISH_BRING_BALANCE_TO_THE_WORD:
 
   movq %rdx, %rax
   popq %r12
@@ -259,10 +259,10 @@ negate_k_bits:
 
   xor %r13, %r13
 
-LOOP8:
+LOOP_NEGATE_K_BITS:
 
   cmp %r8, %r13
-  je CONTINUE9
+  je FINISH_NEGATE_K_BITS
 
   pushq %rsi
   pushq %rdi
@@ -275,9 +275,9 @@ LOOP8:
   movq %rax, (%rdi, %r13, 8)
 
   inc %r13
-  jmp LOOP8
+  jmp LOOP_NEGATE_K_BITS
 
-CONTINUE9:
+FINISH_NEGATE_K_BITS:
 
   pushq %rsi
   pushq %rdi
@@ -288,8 +288,6 @@ CONTINUE9:
   popq %rsi
 
   movq %rax, (%rdi, %r13, 8)
-
-CONTINUE8:
 
   popq %r13
   ret
