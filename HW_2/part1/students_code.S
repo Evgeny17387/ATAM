@@ -44,15 +44,15 @@ read_input:
   xor %rcx, %rcx
 
 # Move cursor to beggining of the code itself
-LOOP1:
+MOVE_TO_CODE_BEGIN:
 
   movb (%rdi,%rcx), %dl
   cmp $0xa, %dl
-  je CONTINUE1
+  je READ_CODE_FROM_FILE_INIT
   inc %rcx
-  jmp LOOP1
+  jmp MOVE_TO_CODE_BEGIN
 
-CONTINUE1:
+READ_CODE_FROM_FILE_INIT:
 
   # Move bytes to return output
   movq %rdi, %r10 # r10 - address of file_buffer
@@ -62,23 +62,23 @@ CONTINUE1:
   xor %r9, %r9 # r9 - running index of codeword
 
 # read from file to code_word buffer
-LOOP2:
+READ_CODE_FROM_FILE:
 
   cmpq length(%rip), %r9
-  je CONTINUE2
+  je CALCULATE_8BYTE_LENGTH
 
   cmp $8, %r11
-  jne CONTINUE3
+  jne MOVE_BYTE_FROM_FILE_BUFFER_TO_CODEWORD
 
   # read 8 bytes from file to file_buffer
   call read_8_bytes
 
   xor %r11, %r11
 
-  jmp LOOP2
+  jmp READ_CODE_FROM_FILE
 
 # read byte from file_buffer to file
-CONTINUE3:
+MOVE_BYTE_FROM_FILE_BUFFER_TO_CODEWORD:
 
   movb (%r10,%r11), %dl
   movb %dl, (%r8, %r9)
@@ -86,10 +86,10 @@ CONTINUE3:
   inc %r11
   inc %r9
   
-  jmp LOOP2
+  jmp READ_CODE_FROM_FILE
 
 # finish running function
-CONTINUE2:
+CALCULATE_8BYTE_LENGTH:
 
   # Close file
   movq $3, %rax
