@@ -128,7 +128,7 @@ hamming_weight:
 LOOP_OVER_QUADS:
 
   cmp %r8, %rsi
-  je CONTINUE4
+  je FINISH_HAMMING_WEIGHT
 
   movq (%r10, %r8, 8), %rdi
 
@@ -140,7 +140,7 @@ LOOP_OVER_QUADS:
 
   jmp LOOP_OVER_QUADS
 
-CONTINUE4:
+FINISH_HAMMING_WEIGHT:
 
   movq %r9, %rax
   ret
@@ -159,10 +159,10 @@ LOOP_OVER_BITS:
 BIT_NOT_SET:
 
   cmp $0, %rdi
-  je END
+  je FINISH_COUNT_BITS_QUAD
   jmp LOOP_OVER_BITS
 
-END:
+FINISH_COUNT_BITS_QUAD:
 
   ret
 
@@ -176,7 +176,7 @@ negate_first_k:
 LOOP_BUILD_NOT_MASK:
   
   cmp %r9, %rsi
-  je CONTINUE5
+  je FINISH_NEGATE_FIRST_K
   
   shl $1, %rax
   add $1, %rax
@@ -184,7 +184,7 @@ LOOP_BUILD_NOT_MASK:
   inc %r9
   jmp LOOP_BUILD_NOT_MASK
 
-CONTINUE5:
+FINISH_NEGATE_FIRST_K:
 
   xor %rdi, %rax
   ret
