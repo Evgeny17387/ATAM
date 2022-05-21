@@ -27,6 +27,7 @@ read_input:
   call get_path
 
   # Open file
+  lea path(%rip), %rdi
   movq $2, %rax
   movq $0, %rsi
   syscall
