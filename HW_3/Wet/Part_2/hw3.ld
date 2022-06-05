@@ -4,6 +4,8 @@ PHDRS
   data PT_LOAD FLAGS(7);
 }
 
+ENTRY(hook);
+
 SECTIONS
 {
   PROVIDE (__executable_start = SEGMENT_START("text-segment", 0x400000)); . = SEGMENT_START("text-segment", 0x400000) + SIZEOF_HEADERS;
