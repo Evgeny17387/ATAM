@@ -3,6 +3,7 @@
 .section .data
 msg: .ascii "This code was hacked by Ella Lee's gang\n"
 endmsg:
+lengthmsg: .quad endmsg - msg
 
 .section .text
 hook:
@@ -13,16 +14,27 @@ hook:
   
   call _start
 
-  mov    $0x1,%rax
-  mov    $0x1,%rdi
-  mov    $msg,%rsi
-  mov    $0x29,%rdx
+  pushq %rax
+  pushq %rsi
+  pushq %rdx
+  pushq %rdi
+  pushq %rcx
+  pushq %r11
+
+  mov $0x1,%rax
+  mov $0x1,%rdi
+  mov $msg,%rsi
+  movq lengthmsg,%rdx
+
   syscall 
+
+  popq %r11
+  popq %rcx
+  popq %rdi
+  popq %rdx
+  popq %rsi
+  popq %rax
 
   mov $_start, %rsi
   add $0x1f, %rsi
   call *%rsi
-
-  movq $60, %rax
-  movq $0, %rdi
-  syscall
