@@ -1,0 +1,17 @@
+mov %512, %cx - 66 b9 00 02
+lea 0(%rip), %r10 - 4c 8d 15 00 00 00 00
+mov 0x5(%rax, %rbx, 2), %rsi - 48 8b 74 58 05
+jmp *0x1234(%rip) - ff 25 34 12 00 00
+
+0x40008d
+
+67 89 43 42          	mov    %eax,0x42(%ebx)
+cc                   	int3   
+29 f3                	sub    %esi,%ebx
+c1 eb 05             	shr    $0x5,%ebx
+
+d1 e8 - shr %eax -> shr %eax, 1 - c1 e8 01
+67 8b 03 - mov (%ebx), %eax -> mov $0(%ebx), %eax - 67 8b 43 00
+
+68 00 00 00 00 - pushq $0 - 6a 00
+e9 fb ff ff ff - jmpq 13 - eb fe
